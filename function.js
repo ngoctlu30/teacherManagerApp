@@ -3,15 +3,16 @@ const readLineSync = require('readline-sync');
 const chalk = require('chalk');
 const dateDiff = require('date-diff');
 let teachers = [];
-
+let subjects = [];
 
 function loadData() {
-  const readData = fs.readFileSync('./data.json');
-  teachers = JSON.parse(readData);
-  console.table(teachers);
+  const readTeachers = fs.readFileSync('./teachers.json');
+  const readSubjects = fs.readFileSync('./subjects.json')
+  teachers = JSON.parse(readTeachers);
+  subjects = JSON.parse(readSubjects);
 }
 
-function addNew() {
+function write(subjectV) {
   let isTrue = false;
   const Code = readLineSync.question("Teacher code: ");
   for(let key of teachers) {
@@ -22,7 +23,7 @@ function addNew() {
   if(isTrue === true) {
     console.log(chalk.red("Teacher code already. Please rewrite teacher code "));
     console.log("");
-    addNew();
+    write();
   }
  
   else {
@@ -30,7 +31,6 @@ function addNew() {
   const Birthday = readLineSync.question('Teacher birthday (dd/mm/yy): ');
   const Gen  = readLineSync.question('Gen of teacher: ');
   const DateJoin = readLineSync.question('Date join (dd/mm/yy): ');  
-  const Subject = readLineSync.question('Subject: ');
   const Coef = readLineSync.questionFloat('Coef money: ');
   const newTeacher = {
     code: Code.toUpperCase(),
@@ -38,13 +38,43 @@ function addNew() {
     birthday: Birthday,
     gen: Gen.toUpperCase(),
     dateJoin: DateJoin,
-    subject: Subject.toUpperCase(),
+    subject: subjectV.toUpperCase(),
     coef: Coef
   };
   teachers.push(newTeacher);
   }
 }
 
+function addNew() {
+  const subject = readLineSync.question('Write subject: ').toUpperCase();
+  const isHave = subjects.includes(subject);
+  if(isHave) {
+    write(subject);
+  }
+  else {
+    console.log(chalk.red("Subject does not exist!"));
+    const anwser = readLineSync.question("Do you want to save it?(Y/N)").toUpperCase();
+    if(anwser === "YES" || anwser ==="Y") {
+      subjects.push(subject);
+      write(subject);
+    }
+    else {
+      addNew();
+    }
+  }
+  
+}
+
+function addSubject() {
+  const newSubject = readLineSync.question('Write new subject: ').toUpperCase();
+  const isTrue = subjects.includes(newSubject);
+  if(isTrue) {
+    console.log(chalk.red("Subject already. Please rewrite new subject"));
+  }
+  else {
+    subjects.push(newSubject);
+  }
+}
 
 function display() {
     if(teachers.length === 0) {
@@ -62,7 +92,7 @@ function deleteTeacher() {
   }
   else {
     const code = readLineSync.question('Write code or name teacher you want to delete: ');
-    let isExist;
+    let isExist; 
     for(let key of teachers) {
       if(key.code === code.toUpperCase()) isExist = true;
     }
@@ -78,6 +108,23 @@ function deleteTeacher() {
   }
 }
 
+function writeEdit() {
+  const newValue = readLineSync.question(`Enter new subject : `).toUpperCase();
+  if(subjects.includes(newValue)) {
+    item[field] = newValue.toUpperCase();
+  }
+  else {
+    console.log(chalk.red("Subject does not exist!"));
+    const anwser = readLineSync.question('Do you want to save it?(Y?N)');
+    if(anwser === "YES" || anwser === "Y") {
+      subjects.push(newValue);
+    }
+    else {
+      writeEdit();
+    }
+    
+  }
+}
 
 function editTeacher() {
   const code = readLineSync.question('Enter code teacher you want to edit: ');
@@ -90,9 +137,12 @@ function editTeacher() {
       if(item.code === code.toUpperCase()) {
         console.table(item);
         const field = readLineSync.question("Enter field you want to edit: ");
-        console.log(item[field]);
-        const newField = readLineSync.question(`Enter new ${field} : `);
-        item[field] = newField.toUpperCase();
+        if(field === "subject") {
+          writeEdit();
+        }
+        else {
+          item[field] = newValue.toUpperCase();
+        }
       }
       return;
     });
@@ -154,20 +204,7 @@ function searchByCode() {
 }
 
 function displayListSubject() {
-  let temp = [];
-  for(let key of teachers) {
-    temp.push(key.subject);
-  }
-  let isExist = (temp, x) => temp.includes(x);
-  let arr = [];
-  temp.forEach(e => {
-    if(!isExist(arr, e)) arr.push(e);
-  })
-  if(arr.length === 0) {
-    console.log(chalk.red("Data do not exsit"));
-  } else {
-  console.log(arr);
-  }
+  console.log(subjects);
 }
 function displayTeacherWithSubject() {
   const subject = readLineSync.question('Enter subject: ');
@@ -181,47 +218,48 @@ function deleteSubject() {
     console.log(chalk.red("Dont have any teacher"));
   }
   else {
-    let isExist;
-    const subject = readLineSync.question('Write subject want to del: ');
-    const x = RegExp(subject, 'i');
-    for(let key of teachers) {
-      isExist = true;
-    }
+    const subject = readLineSync.question('Write subject want to del: ').toUpperCase();
+    let isExist = subjects.includes(subject);
+    
     if(isExist) {
-      teachers = teachers.filter((item) => {
-        return item.subject !== subject.toUpperCase();
-      });
+      for(let i=0 ; i<subjects.length ; i++) {
+        if(subjects[i] === subject) {
+          teachers.forEach(e => {
+            if(e.subject === subjects[i]) {
+              e.subject = null;
+            }
+          })
+          subjects.splice(i,1);
+        }
+      }
     }
     else {
       console.log(chalk.red("Subject does not exsit"));
     }
   }
-  
 }
 
 function editSubject() {
-  const a = readLineSync.question("Write subject want to edit: ");
-  let isExist;
-  for(let k of teachers) {
-    if(k.subject === a.toUpperCase()) {
-      isExist = true;
-    }
-    
-  }
-  if(isExist == true) {
-    const newSubject = readLineSync.question('Enter new subject: ');
-    teachers.map(item => {
-      if(item.subject === a.toUpperCase()) {
-        item.subject = newSubject.toUpperCase();
+  const a = readLineSync.question("Write subject want to edit: ").toUpperCase();
+  let isExist = subjects.includes(a);
+  if(isExist === true) {
+    const newSubject = readLineSync.question('Enter new subject: ').toUpperCase();
+    for(let i=0 ; i<subjects.length ; i++) {
+      if(subjects[i] === a) {
+        teachers.forEach(e => {
+          if(e.subject === subjects[i]) {
+            e.subject = newSubject;
+          }
+        });
+        subjects.splice(i,1);
+        subjects.splice(i, 0, newSubject);
       }
-      return;
-    })
+    }
   }
   else {
     console.log(chalk.red("Subject is not exsit"));
   }
 }
-
 
 function ageMoreThanN() {
   let temp = [];
@@ -248,8 +286,10 @@ function beautiful() {
 }
 
 function save() {
-  const toString = JSON.stringify(teachers);
-  let data = fs.writeFileSync('./data.json', toString, { encoding: 'utf8'});
+  const teachersToString = JSON.stringify(teachers);
+  const subjectsToString = JSON.stringify(subjects);
+  fs.writeFileSync('./teachers.json', teachersToString, { encoding: 'utf8'});
+  fs.writeFileSync('./subjects.json', subjectsToString, { encoding: 'utf8'});
 }
 module.exports = {
   addNew,
@@ -265,5 +305,6 @@ module.exports = {
   ageMoreThanN,
   loadData,
   save,
-  beautiful
+  beautiful,
+  addSubject
 }

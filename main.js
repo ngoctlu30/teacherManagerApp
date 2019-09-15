@@ -14,6 +14,7 @@ function Menu() {
   console.log('9. Delete a subject ');
   console.log('10.Edit subject');
   console.log("11.Display list teachers have age more than N");
+  console.log("12.Add new subject ");
   console.log('0. Exit');
   console.log("=========================================");
   const option = readLineSync.question('Enter option: ');
@@ -21,19 +22,16 @@ function Menu() {
     case '1':
       func.addNew();
       func.beautiful();
-      func.save();
       Menu();
       break;
     case "2":
       func.deleteTeacher();
       func.beautiful()
-      func.save();
       Menu();
       break;
     case "3":
       func.editTeacher();
       func.beautiful()
-      func.save();
       Menu();
       break;
     case "4":
@@ -64,13 +62,11 @@ function Menu() {
     case "9":
       func.deleteSubject();
       func.beautiful()
-      func.save();
       Menu();
       break;
     case "10":
       func.editSubject();
       func.beautiful()
-      func.save();
       Menu();
       break;
     case "11":
@@ -78,7 +74,13 @@ function Menu() {
       func.beautiful()
       Menu();
       break;
+    case "12":
+      func.addSubject();
+      func.beautiful();
+      Menu();
+      break;
     case "0":
+      func.save();
       break;
   };
 }
