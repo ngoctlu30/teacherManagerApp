@@ -15,6 +15,11 @@ function Menu() {
   console.log('10.Edit department');
   console.log("11.Display list teachers have age more than N");
   console.log("12.Add new department ");
+  console.log("13.Add new subject");
+  console.log("14.Display list subject");
+  console.log("15.Edit a subject");
+  console.log("16.Delete a subject");
+  console.log("17.Add subject for teacher");
   console.log('0. Exit');
   console.log("=========================================");
   const option = readLineSync.question('Enter option: ');
@@ -76,6 +81,32 @@ function Menu() {
       break;
     case "12":
       func.addDepartment();
+      func.beautiful();
+      Menu();
+      break;
+    case "13":
+      func.addSubject();
+      
+      func.beautiful();
+      Menu();
+      break;
+    case "14":
+        func.displaySubject();
+        func.beautiful();
+        Menu();
+        break;
+    case "15":
+      func.editSubject();
+      func.beautiful();
+      Menu();
+      break;
+    case "16":
+      func.deleteSubject();
+      func.beautiful();
+      Menu();
+      break;
+    case "17":
+      func.addSubjectForTeacher();
       func.beautiful();
       Menu();
       break;
