@@ -9,12 +9,12 @@ function Menu() {
   console.log('4. Display list teacher');
   console.log('5. Search by name');
   console.log('6. Seach by code');
-  console.log('7. Display list subject');
-  console.log('8. Display teachers belongto subject');
-  console.log('9. Delete a subject ');
-  console.log('10.Edit subject');
+  console.log('7. Display list department');
+  console.log('8. Display teachers belongto department');
+  console.log('9. Delete a department ');
+  console.log('10.Edit department');
   console.log("11.Display list teachers have age more than N");
-  console.log("12.Add new subject ");
+  console.log("12.Add new department ");
   console.log('0. Exit');
   console.log("=========================================");
   const option = readLineSync.question('Enter option: ');
@@ -50,22 +50,22 @@ function Menu() {
       Menu();
       break;
     case "7":
-      func.displayListSubject();
+      func.displayListDepartment();
       func.beautiful()
       Menu();
       break;
     case "8":
-      func.displayTeacherWithSubject();
+      func.displayTeacherWithDepartment();
       func.beautiful()
       Menu();
       break;
     case "9":
-      func.deleteSubject();
+      func.deleteDepartment();
       func.beautiful()
       Menu();
       break;
     case "10":
-      func.editSubject();
+      func.editDepartment();
       func.beautiful()
       Menu();
       break;
@@ -75,7 +75,7 @@ function Menu() {
       Menu();
       break;
     case "12":
-      func.addSubject();
+      func.addDepartment();
       func.beautiful();
       Menu();
       break;
