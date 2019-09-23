@@ -1,6 +1,10 @@
 # teacherManagerApp
 This is console app teacher manager has written by javascript.
-How to run:
-  + install node & npm (https://nodejs.org/en/)
-  + install packages: npm i
-  + node main.js
+## Installation
+Go to [node] (https://nodejs.org/en/) to install
+
+## Usage
+```
+npm i 
+node main
+```
